@@ -48,19 +48,18 @@ public class StudentController {
             outputModel1 = (OutputModel) this.studentService.deleteByRollNum(rollNum);
             if (outputModel1.getErrorMessage().equals("")) {
                 return new ResponseEntity<>(outputModel1, HttpStatus.OK);
+
+            }else{
+                return new ResponseEntity<>(outputModel1,HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(outputModel1, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(outputModel1, HttpStatus.valueOf(500));
               }
-        return new ResponseEntity<>(outputModel1,HttpStatus.OK);
+
         }
 
-
-
-
-
-    @GetMapping("/get{rollNum}")
-    public ResponseEntity<OutputModel> getByRollNum(@PathVariable Long rollNum) {
+        @GetMapping("/get{rollNum}")
+        public ResponseEntity<OutputModel> getByRollNum(@PathVariable Long rollNum) {
         OutputModel outputModel = new OutputModel();
         try {
             outputModel = this.studentService.findByRollNum(rollNum);

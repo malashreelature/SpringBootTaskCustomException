@@ -56,22 +56,21 @@ public class StudentServiceImpl implements StudentService {
     public OutputModel deleteByRollNum(Long rollNum) {
         OutputModel model1 = new OutputModel();
         try {
-            model1= (OutputModel) this.studentRepository.deleteByRollNum(rollNum).orElseThrow(()->
+            var res = (Integer)this.studentRepository.deleteByRollNum(rollNum).orElseThrow(()->
                     new StudentNotFoundException("Student with rollNum not found"));
-            model1.setErrorMessage("");
-            if (!model1.getStudent().getRollNum().equals(rollNum)) {
-                throw new StudentNotFoundException("");
-            }
-
+           model1.setStudent(null);
+           model1.setErrorMessage(" ");
+            if (res!=1) {
+                throw new StudentNotFoundException("Student with rollNum not found");}
         } catch (StudentNotFoundException e) {
             model1.setStudent(null);
             model1.setErrorMessage(e.getMessage());
         } catch (Exception e) {
             model1.setStudent(null);
-            model1.setErrorMessage(e.getMessage());
+            model1.setErrorMessage(e.getMessage());}
+            return model1;
+
         }
-        return model1;
-    }
     }
 
 
