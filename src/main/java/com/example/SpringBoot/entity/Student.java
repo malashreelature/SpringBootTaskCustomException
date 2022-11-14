@@ -1,12 +1,10 @@
 package com.example.SpringBoot.entity;
 
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name="student")
-public class Student {
+public class Student  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 

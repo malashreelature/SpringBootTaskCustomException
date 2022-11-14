@@ -3,6 +3,7 @@ package com.example.SpringBoot.controller;
 import com.example.SpringBoot.entity.OutputModel;
 import com.example.SpringBoot.entity.Student;
 import com.example.SpringBoot.service.StudentService;
+import com.example.SpringBoot.service.exception.StudentAlreadyExistsException;
 import com.example.SpringBoot.service.exception.StudentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,21 +24,34 @@ public class StudentController {
         return "welcome to E2Ehiring";
     }
 
-    @PostMapping(value = "/student")
-    public Student saveStudent(@RequestBody Student student) {
-        studentService.saveStudent(student);
-        return student;
-    }
 
     @GetMapping(value = "/allStudent")
     public List<Student> findAllStudent() {
         return studentService.findAllStudent();
     }
 
-    @PutMapping(value = "/student")
-    public Student updateStudent(@RequestBody Student student) {
-        return studentService.updateStudent(student);
+
+    @PostMapping(value = "/student")
+    public ResponseEntity<OutputModel> CreateStudent(@RequestBody  Student student) {
+        OutputModel model = new OutputModel();
+        try {
+           if(model!=null){
+               model=(OutputModel) studentService.save(student);
+               return new ResponseEntity<>(model, HttpStatus.CREATED);
+           }
+           else{
+               return new ResponseEntity<>(model, HttpStatus.NOT_FOUND);
+            }
+        }catch (StudentAlreadyExistsException e){
+            model.setErrorMessage(e.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(model, HttpStatus.valueOf(500));
+        }
+
     }
+
 
 
 
